@@ -1,13 +1,15 @@
-import TuClientProducer from "./TuClient";
-// import WebClientProducer from "./WebClient";
 
 import { ClientType, IClient, IClientProducer } from "./abstraction";
+import { TuClient, TuClientProducer } from "./TuClient";
+// import {WebClient, WebClientProducer} from "./WebClient";
+
 
 class ClientFactory {
     private static _instance: ClientFactory;
     private clientTypeMapper: Map<ClientType, IClientProducer>;
 
     constructor() {
+        this.clientTypeMapper = new Map<ClientType, IClientProducer>();
         this.clientTypeMapper.set(ClientType.Tu, new TuClientProducer());
         // this.clientTypeMapper.set(ClientType.Web, new WebClientProducer());
     }
@@ -30,11 +32,13 @@ class ClientFactory {
 }
 
 export {
-    
-    ClientType, 
+    ClientType,
 
-    IClient, 
+    IClient,
     IClientProducer,
 
     ClientFactory,
+
+    TuClient,
+    // WebClient
 }

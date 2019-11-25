@@ -1,12 +1,23 @@
 import { IClientProducer, IClient } from "./abstraction";
+import randomClientId from "../utils/id-generator";
+import * as Websocket from "ws";
 
-class TuClient implements IClient {
-
+export class TuClient implements IClient {
     id: string;
     target: string;
 
     connect(url: string) {
-        throw new Error("Method not implemented.");
+        const ws = new Websocket(url);
+        ws.on("open", () => {
+            // console.log("connected websocket");
+        })
+        ws.onmessage = function (msg) {
+            console.log(msg);
+        };
+        ws.on("error", err => {
+            console.log("connected error");
+        })
+        this.ws = ws;
     }
 
     disconnect() {
@@ -17,19 +28,23 @@ class TuClient implements IClient {
 
     }
 
+    constructor(id: string) {
+        this.id = id
+    }
 
     type: string;
+    ws: Websocket;
 }
 
 
-class TuClientProducer implements IClientProducer {
+export class TuClientProducer implements IClientProducer {
     create(): IClient {
-        const c = new TuClient();
+        const id = randomClientId();
+
+        const c = new TuClient(id);
 
         c.type = "tu";
 
         return c;
     }
 }
-
-export default TuClientProducer;
