@@ -9,13 +9,13 @@ export class TuClient implements IClient {
     connect(url: string) {
         const ws = new Websocket(url);
         ws.on("open", () => {
-            // console.log("connected websocket");
+            // console.log("connected " + this.id);
         })
         ws.onmessage = function (msg) {
             console.log(msg);
         };
         ws.on("error", err => {
-            console.log("connected error");
+            console.log("connected error", err);
         })
         this.ws = ws;
     }
