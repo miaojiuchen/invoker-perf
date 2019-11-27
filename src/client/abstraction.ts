@@ -1,16 +1,14 @@
 
 export interface IClient {
     readonly id: string
-    target: string
 
     connect(url: string)
     disconnect()
-
-    send(msg: any)
+    send(msg: string | ArrayBuffer)
 }
 
 export interface IClientProducer {
-    create(): IClient
+    create(id: string, args: any): IClient
 }
 
 export enum ClientType {

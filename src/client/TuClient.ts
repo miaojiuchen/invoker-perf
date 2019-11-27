@@ -1,19 +1,20 @@
 import { IClientProducer, IClient } from "./abstraction";
-import randomClientId from "../utils/id-generator";
 import * as Websocket from "ws";
 
 export class TuClient implements IClient {
-    id: string;
-    target: string;
+    readonly id: string;
+    ws: Websocket;
+    
+    constructor(id: string) {
+        this.id = id
+    }
 
     connect(url: string) {
-        const ws = new Websocket(url);
+        const ws = new Websocket(url+`?id=${this.id}`);
         ws.on("open", () => {
-            // console.log("connected " + this.id);
+            
         })
-        ws.onmessage = function (msg) {
-            console.log(msg);
-        };
+        ws.onmessage = this.handleMessage;
         ws.on("error", err => {
             console.log("connected error", err);
         })
@@ -24,27 +25,23 @@ export class TuClient implements IClient {
         throw new Error("Method not implemented.");
     }
 
-    send() {
-
+    send(msg: string | ArrayBuffer) {
+        this.ws.send(msg);
     }
 
-    constructor(id: string) {
-        this.id = id
+    handleMessage(msg: Websocket.MessageEvent) {
+        if (msg.data instanceof ArrayBuffer) {
+            console.log(msg.data);
+        }
+        else if (typeof msg.data === "string") {
+            console.log(msg.data);
+            this.send("world!");
+        }
     }
-
-    type: string;
-    ws: Websocket;
 }
 
-
 export class TuClientProducer implements IClientProducer {
-    create(): IClient {
-        const id = randomClientId();
-
-        const c = new TuClient(id);
-
-        c.type = "tu";
-
-        return c;
+    create(id: string): IClient {
+        return new TuClient(id);
     }
 }

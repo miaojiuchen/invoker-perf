@@ -1,7 +1,7 @@
 
 import { ClientType, IClient, IClientProducer } from "./abstraction";
 import { TuClient, TuClientProducer } from "./TuClient";
-// import {WebClient, WebClientProducer} from "./WebClient";
+import { WebClient, WebClientProducer } from "./WebClient";
 
 
 class ClientFactory {
@@ -11,7 +11,7 @@ class ClientFactory {
     constructor() {
         this.clientTypeMapper = new Map<ClientType, IClientProducer>();
         this.clientTypeMapper.set(ClientType.Tu, new TuClientProducer());
-        // this.clientTypeMapper.set(ClientType.Web, new WebClientProducer());
+        this.clientTypeMapper.set(ClientType.Web, new WebClientProducer());
     }
 
     public static get instance() {
@@ -22,9 +22,9 @@ class ClientFactory {
         return this._instance;
     }
 
-    create(type: ClientType): IClient {
+    create(type: ClientType, id: string, options?: any): IClient {
         if (this.clientTypeMapper.has(type)) {
-            return this.clientTypeMapper.get(type).create();
+            return this.clientTypeMapper.get(type).create(id, options);
         }
 
         throw new Error("unknown client type");
@@ -40,5 +40,5 @@ export {
     ClientFactory,
 
     TuClient,
-    // WebClient
+    WebClient
 }
