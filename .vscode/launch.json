@@ -12,6 +12,11 @@
                 "node_modules/**"
             ],
             "program": "${workspaceFolder}/dist/index.js",
+            "args": [
+                "--connection-count=1",
+                "--ws-address=ws://192.168.1.149:7788/invoker",
+                "--rps=1000"
+            ],
             "preLaunchTask": "tsc: watch - tsconfig.json",
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"

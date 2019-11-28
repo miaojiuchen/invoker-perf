@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@types/is-plain-object@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.npm.taobao.org/@types/is-plain-object/download/@types/is-plain-object-2.0.4.tgz#20fbadb3bec1eb1bccb7adc2001fff29b37a0168"
+  integrity sha1-IPuts77B6xvMt63CAB//KbN6AWg=
+  dependencies:
+    is-plain-object "*"
+
 "@types/lodash@^4.14.149":
   version "4.14.149"
   resolved "https://registry.npm.taobao.org/@types/lodash/download/@types/lodash-4.14.149.tgz#1342d63d948c6062838fbf961012f74d4e638440"
@@ -16,6 +23,11 @@
   version "8.10.59"
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-8.10.59.tgz#9e34261f30183f9777017a13d185dfac6b899e04"
   integrity sha1-njQmHzAYP5d3AXoT0YXfrGuJngQ=
+
+"@types/spark-md5@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.npm.taobao.org/@types/spark-md5/download/@types/spark-md5-3.0.2.tgz#da2e8a778a20335fc4f40b6471c4b0d86b70da55"
+  integrity sha1-2i6Kd4ogM1/E9AtkccSw2Gtw2lU=
 
 "@types/uuid@^3.4.6":
   version "3.4.6"
@@ -222,6 +234,13 @@ is-fullwidth-code-point@^2.0.0:
   resolved "https://registry.npm.taobao.org/is-fullwidth-code-point/download/is-fullwidth-code-point-2.0.0.tgz#a3b30a5c4f199183167aaab93beefae3ddfb654f"
   integrity sha1-o7MKXE8ZkYMWeqq5O+764937ZU8=
 
+is-plain-object@*, is-plain-object@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npm.taobao.org/is-plain-object/download/is-plain-object-3.0.0.tgz#47bfc5da1b5d50d64110806c199359482e75a928"
+  integrity sha1-R7/F2htdUNZBEIBsGZNZSC51qSg=
+  dependencies:
+    isobject "^4.0.0"
+
 is-stream@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/is-stream/download/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
@@ -231,6 +250,11 @@ isexe@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/isexe/download/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
+
+isobject@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npm.taobao.org/isobject/download/isobject-4.0.0.tgz#3f1c9155e73b192022a80819bacd0343711697b0"
+  integrity sha1-PxyRVec7GSAiqAgZus0DQ3EWl7A=
 
 json-parse-better-errors@^1.0.1:
   version "1.0.2"
@@ -450,6 +474,11 @@ signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.npm.taobao.org/signal-exit/download/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
+
+spark-md5@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npm.taobao.org/spark-md5/download/spark-md5-3.0.0.tgz#3722227c54e2faf24b1dc6d933cc144e6f71bfef"
+  integrity sha1-NyIifFTi+vJLHcbZM8wUTm9xv+8=
 
 spawn-command@^0.0.2-1:
   version "0.0.2-1"

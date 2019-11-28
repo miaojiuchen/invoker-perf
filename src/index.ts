@@ -23,8 +23,10 @@ const coreConnectionCountList = getPerCoreValue(connectionCount, processer_count
 const coreRpsList = getPerCoreValue(rps, processer_count);
 
 for (let i = 0; i < processer_count; ++i) {
-    const child = cp.fork(path.join(__dirname, 'app.js'));
-    child.send({ worker_id: i, connectionCount: coreConnectionCountList[i], wsAddress, rps: coreRpsList[i] })
+    if(coreConnectionCountList[i] > 0) {
+        const child = cp.fork(path.join(__dirname, 'app.js'));
+        child.send({ worker_id: i, connectionCount: coreConnectionCountList[i], wsAddress, rps: coreRpsList[i] });
+    }
 }
 
 function getPerCoreValue(total: number, coreCount: number): Array<number> {

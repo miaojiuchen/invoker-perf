@@ -10,7 +10,7 @@
     "build": "tsc --build",
     "clean": "tsc --build --clean",
     "tsc": "tsc -w",
-    "start": "node dist/index.js --connection-count=1000 --ws-address=ws://192.168.1.149:7788/invoker --rps=1000"
+    "start": "node dist/index.js --connection-count=1 --ws-address=ws://192.168.1.149:7788/invoker --rps=1000"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.149",
@@ -22,7 +22,11 @@
     "typescript": "^3.2.2"
   },
   "dependencies": {
+    "@types/is-plain-object": "^2.0.4",
+    "@types/spark-md5": "^3.0.2",
+    "is-plain-object": "^3.0.0",
     "lodash": "^4.17.15",
+    "spark-md5": "^3.0.0",
     "uuid": "^3.3.3",
     "ws": "^7.2.0",
     "yargs-parser": "^16.1.0"

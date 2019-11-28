@@ -3,7 +3,6 @@ import { ClientType, IClient, IClientProducer } from "./abstraction";
 import { TuClient, TuClientProducer } from "./TuClient";
 import { WebClient, WebClientProducer } from "./WebClient";
 
-
 class ClientFactory {
     private static _instance: ClientFactory;
     private clientTypeMapper: Map<ClientType, IClientProducer>;

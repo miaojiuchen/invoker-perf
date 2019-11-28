@@ -4,7 +4,8 @@ export interface IClient {
 
     connect(url: string)
     disconnect()
-    send(msg: string | ArrayBuffer)
+
+    begin()
 }
 
 export interface IClientProducer {
