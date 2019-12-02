@@ -1,8 +1,7 @@
 import { IClientProducer, IClient } from "./abstraction";
 import * as Websocket from "ws";
-const isPlainObject = require("is-plain-object");
-
-const packetSize = 1024 * 1024;
+import { getPerItemValue } from "../utils";
+import * as _ from "lodash";
 
 export class WebClient implements IClient {
     readonly id: string;
@@ -11,24 +10,31 @@ export class WebClient implements IClient {
     target: string;
     data?: ArrayBuffer;
     md5?: string;
+    speed?: number; // byte send per second
+
+    showSentLog: boolean;
+    pid: number;
 
     constructor(id: string, target: string) {
         this.id = id;
         this.target = target;
     }
 
-    begin() {
+    begin = () => {
         this.send({ cmd: "start", byteLength: this.data.byteLength });
     }
 
-    connect(url: string) {
-        const ws = new Websocket(url + `?target=${this.target}`);
-        ws.on("open", () => { })
-        ws.onmessage = this.handleMessage;
-        ws.on("error", err => {
-            console.error("connected error", err);
-        })
-        this.ws = ws;
+    connect = async (url: string) => {
+        await new Promise((resolve, reject) => {
+            const ws = new Websocket(url + `?target=${this.target}`);
+            ws.on("open", () => { resolve(); })
+            ws.onmessage = this.handleMessage;
+            ws.on("error", err => {
+                console.error("connected error", err);
+                reject(err);
+            })
+            this.ws = ws;
+        });
     }
 
     disconnect() {
@@ -43,38 +49,53 @@ export class WebClient implements IClient {
         this.ws.send(bytes);
     }
 
-
     handleMessage = (e: Websocket.MessageEvent) => {
         const msg = e.data;
         if (typeof msg === "string") {
-            const payload = JSON.parse(msg);
+            try {
+                const payload = JSON.parse(msg);
 
-            const { cmd } = payload;
+                const { cmd } = payload;
 
-            if (cmd === "start_ack") {
-                console.log("start ack, trasfering data......");
-                this.startTransfer();
-                return;
-            }
+                if (cmd === "start_ack") {
+                    // console.log("start ack, trasfering data......");
+                    this.startTransfer();
+                    return;
+                }
 
-            if (cmd === "finish_ack") {
-                console.log("receive md5check:", payload.md5check);
-                return;
+                if (cmd === "finish_ack") {
+                    console.log("receive md5check:", payload.md5check);
+                    return;
+                }
+            } catch (e) {
+                console.error(e);
             }
         }
     }
 
-    startTransfer() {
+    startTransfer = async () => {
+        const packetSize = this.speed;
         const packetCount = Math.ceil(this.data.byteLength / packetSize);
-        // const dataView = new DataView(this.data)
-        for (let i = 0; i < packetCount; ++i) {
+
+        let i = 0;
+        let ticker_print;
+        if (this.showSentLog) {
+            ticker_print = setInterval(() => { console.log(`worker ${this.pid} packet sent: ${i}/${packetCount}`); }, 5000);
+        }
+
+        const ticker = setInterval(() => {
+            if (i >= packetCount) {
+                this.send({ cmd: "finish" });
+                ticker && clearInterval(ticker);
+                ticker_print && clearInterval(ticker_print);
+                return;
+            }
             const start = i * packetSize;
             const end = start + packetSize;
             const buf = this.data.slice(start, end);
-            console.log("file thrunk size:", buf.byteLength);
             this.sendBytes(buf);
-        }
-        this.send({ cmd: "finish" });
+            i++;
+        }, 1000)
     }
 }
 
@@ -85,10 +106,11 @@ export class WebClientProducer implements IClientProducer {
         }
 
         const c = new WebClient(id, options.target)
-        if (options.data) {
-            c.data = options.data;
-            c.md5 = options.md5;
-        }
+        c.data = options.data;
+        c.md5 = options.md5;
+        c.speed = options.speed;
+        c.showSentLog = !!options.showSentLog;
+        c.pid = options.pid;
 
         return c;
     }

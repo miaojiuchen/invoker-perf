@@ -9,24 +9,29 @@ export class TuClient implements IClient {
 
     md5?: string;
     size?: number;
-    dataReceiver: Array<ArrayBuffer>;
+    spark: SparkMD5.ArrayBuffer;
 
     constructor(id: string) {
-        this.id = id
+        this.id = id;
+        this.spark = new SparkMD5.ArrayBuffer();
     }
 
     begin() {
         throw new Error("Method not implemented.");
     }
 
-    connect(url: string) {
-        const ws = new Websocket(url + `?id=${this.id}`);
-        ws.on("open", () => { });
-        ws.onmessage = this.handleMessage;
-        ws.on("error", err => {
-            console.error("connected error", err);
+    connect = async (url: string) => {
+        await new Promise((resolve, reject) => {
+            const ws = new Websocket(url + `?id=${this.id}`);
+            ws.on("open", () => { resolve(); });
+            ws.onmessage = this.handleMessage;
+            ws.on("error", err => {
+                console.error("connected error", err);
+                reject(err);
+            })
+            this.ws = ws;
         })
-        this.ws = ws;
+
     }
 
     disconnect() {
@@ -44,14 +49,14 @@ export class TuClient implements IClient {
     handleMessage = (e: Websocket.MessageEvent) => {
         const msg = e.data;
         if (msg instanceof Buffer) {
-            this.dataReceiver.push(msg);
+            this.spark.append(msg);
         }
         else if (typeof msg === "string") {
             const payload = JSON.parse(msg);
             const { cmd } = payload;
             if (cmd === "start") {
                 const byteLength = parseInt(payload.byteLength);
-                this.dataReceiver = [];
+                this.spark = new SparkMD5.ArrayBuffer(); // reset receiver
                 this.size = byteLength;
                 this.send({ cmd: "start_ack" });
                 return;
@@ -68,10 +73,7 @@ export class TuClient implements IClient {
     }
 
     handleFinish(): boolean {
-        const spark = new SparkMD5.ArrayBuffer();
-        this.dataReceiver.forEach(ar => spark.append(ar));
-        const md5 = spark.end()
-        console.log("md5check:", md5, this.md5);
+        const md5 = this.spark.end();
         return md5 === this.md5;
     }
 }

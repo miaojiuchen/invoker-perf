@@ -10,7 +10,7 @@
     "build": "tsc --build",
     "clean": "tsc --build --clean",
     "tsc": "tsc -w",
-    "start": "node dist/index.js --connection-count=1 --ws-address=ws://192.168.1.149:7788/invoker --rps=1000"
+    "start": "node dist/index.js --connection-count=1000 --rps=500 --speed=8 --file-size=1 --ws-address=ws://192.168.1.149:7788/invoker"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.149",
