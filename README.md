@@ -1,5 +1,6 @@
 # invokersvc 压力测试
-node-connections.ts 模拟100万个传输单元连接
-web-connections.ts 模拟100万个web端的连接
 
+模拟 N：N websocket 连接以千兆流量传输文件数据，最后校验md5
+
+测试报告见：https://www.tapd.cn/34913700/prong/stories/view/1134913700001000221
 
